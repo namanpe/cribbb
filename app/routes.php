@@ -12,6 +12,22 @@
 */
 
 Route::get('/', function()
-{
+{	
+
 	return View::make('hello');
+});
+
+Route::get('/user', function()
+{
+  // Create a new Post
+	$post = new Post(array('body' => 'Yada yada yada'));
+	// Grab User 1
+	$user = User::find(1);
+	// Save the Post
+	
+  var_dump($user->posts()->save($post));
+});
+
+Route::get('/phpinfo',function(){
+	phpinfo();
 });
