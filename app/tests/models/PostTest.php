@@ -23,9 +23,33 @@ class PostTest extends TestCase {
 	 
 	  // Set the boy
 	  $post->body = "Yada yada yada";
-	  print_r($post->save());
+	 
 	  // Post should not save
 	  $this->assertFalse($post->save());
+	 
+	  // Save the errors
+	  $errors = $post->errors()->all();
+	 
+	  // There should be 1 error
+	  $this->assertCount(1, $errors);
+	 
+	  // The error should be set
+	  $this->assertEquals($errors[0], "The user id field is required.");
+	}
+
+	/**
+	 * Test that Posts' body is required
+	 */
+	public function testPostBodyIsRequired()
+	{
+	  // Create new Post
+	  $post = new Post;
+	  //print_r($post);
+	  // Create a User
+	  $user = FactoryMuff::create('User');
+	  //print_r($user);
+	  // Post should not save
+	  $this->assertFalse($user->posts()->save($post));
 	 
 	  // Save the errors
 	  $errors = $post->errors()->all();
@@ -34,8 +58,18 @@ class PostTest extends TestCase {
 	  $this->assertCount(1, $errors);
 	 
 	  // The error should be set
-	  $this->assertEquals($errors[0], "The user id field is required.");
+	  $this->assertEquals($errors[0], "The body field is required.");
 	}
 
-
+	/**
+	 * Test Post saves correctly
+	 */
+	public function testPostSavesCorrectly()
+	{
+	  // Create a new Post
+	  $post = FactoryMuff::create('Post');
+	 
+	  // Save the Post
+	  $this->assertTrue($post->save());
+	}
 }
