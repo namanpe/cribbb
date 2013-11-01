@@ -28,4 +28,6 @@ class UserTest extends TestCase {
 	  // The username error should be set
 	  $this->assertEquals($errors[0], "The username field is required.");
 	}
+
+	
 }
