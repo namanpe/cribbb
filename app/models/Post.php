@@ -11,7 +11,8 @@ class Post extends Ardent {
 	 */
 	public static $rules = array(
 	  'body' => 'required',
-	  'user_id' => 'required|numeric'
+	  'user_id' => 'required|numeric',
+	  'clique_id' => 'required|numeric'
 	);
 
 	/**
@@ -20,6 +21,7 @@ class Post extends Ardent {
 	public static $factory = array(
 	  'body' => 'text',
 	  'user_id' => 'factory|User',
+	  'clique_id' => 'factory|Clique'
 	);
 
 
@@ -32,38 +34,18 @@ class Post extends Ardent {
 	}
 
 	/**
-	 * Test that Posts' body is required
+	 * Clique relationship
 	 */
-	public function testPostBodyIsRequired()
+	public function clique()
 	{
-	  // Create new Post
-	  $post = new Post;
-	 
-	  // Create a User
-	  $user = FactoryMuff::create('User');
-	 
-	  // Post should not save
-	  $this->assertFalse($user->posts()->save($post));
-	 
-	  // Save the errors
-	  $errors = $post->errors()->all();
-	 
-	  // There should be 1 error
-	  $this->assertCount(1, $errors);
-	 
-	  // The error should be set
-	  $this->assertEquals($errors[0], "The body field is required.");
+	  return $this->belongsTo('Clique');
 	}
-   
-   /**
-	 * Test Post saves correctly
+
+	/**
+	 * Comment relationship
 	 */
-	public function testPostSavesCorrectly()
+	public function comments()
 	{
-	  // Create a new Post
-	  $post = FactoryMuff::create('Post');
-	 
-	  // Save the Post
-	  $this->assertTrue($post->save());
+	  return $this->morphMany('Comment', 'commentable');
 	}
 }

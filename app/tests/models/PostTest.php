@@ -9,7 +9,7 @@ class PostTest extends TestCase {
 	{
 	  // Instantiate new Post
 	  $post = FactoryMuff::create('Post');
-	  
+
 	  $this->assertEquals($post->user_id, $post->user->id);
 	}
 
@@ -23,9 +23,12 @@ class PostTest extends TestCase {
 	 
 	  // Set the boy
 	  $post->body = "Yada yada yada";
+
+	  //create a user
+	  $clique = FactoryMuff::create('Clique');
 	 
 	  // Post should not save
-	  $this->assertFalse($post->save());
+	  $this->assertFalse($clique->posts()->save($post));
 	 
 	  // Save the errors
 	  $errors = $post->errors()->all();
@@ -44,10 +47,15 @@ class PostTest extends TestCase {
 	{
 	  // Create new Post
 	  $post = new Post;
-	  //print_r($post);
+
 	  // Create a User
 	  $user = FactoryMuff::create('User');
-	  //print_r($user);
+
+	  //create a user
+	  $clique = FactoryMuff::create('Clique');
+
+	  $clique->posts()->save($post);
+
 	  // Post should not save
 	  $this->assertFalse($user->posts()->save($post));
 	 
@@ -61,6 +69,31 @@ class PostTest extends TestCase {
 	  $this->assertEquals($errors[0], "The body field is required.");
 	}
 
+	public function testPostCliqueIsRequered()
+	{
+		//create new Post
+		$post = new Post;
+
+		// set the body
+		$post->body = "lalala cuerpo";
+
+		//create a user 
+		$user = FactoryMuff::create('User');
+
+		// Post should not save
+	  	$this->assertFalse($user->posts()->save($post));
+
+	  	//save the erros
+	  	$errors = $post->errors()->all();
+
+	  	//there should be 1 error
+	  	$this->assertCount(1, $errors);
+
+	  	//the error should be set
+	  	$this->assertEquals($errors[0], "The clique id field is required.");
+
+	}
+
 	/**
 	 * Test Post saves correctly
 	 */
@@ -72,4 +105,7 @@ class PostTest extends TestCase {
 	  // Save the Post
 	  $this->assertTrue($post->save());
 	}
+
+
+
 }
